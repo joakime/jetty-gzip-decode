@@ -1,5 +1,13 @@
 package org.sample.jetty.client.http2;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Comparator;
+import java.util.Random;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.HttpClientTransport;
 import org.eclipse.jetty.client.api.ContentProvider;
@@ -13,13 +21,6 @@ import org.eclipse.jetty.http2.client.http.HttpClientTransportOverHTTP2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Random;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 /**
  * Date: 2021/4/1
  */
@@ -27,6 +28,13 @@ public class HttpClientWithHttp2Transport {
     private static final Logger log = LoggerFactory.getLogger(HttpClientWithHttp2Transport.class);
 
     public static void main(String[] args) {
+
+        System.getProperties().entrySet().stream()
+            .filter(entry -> entry.getKey().toString().matches("^(java|jdk|sun|user|file|os)\\..*"))
+            .sorted(Comparator.comparing(e -> e.getKey().toString()))
+            .forEach(entry ->
+                log.info("System Property [" + entry.getKey() + "] = " + entry.getValue()));
+
         String url = "http://127.0.0.1:8081/tomcat/post";
         String requestBody = "{ \"age\": 0, \"name\": \"string\"}";
         int headerCount = 10;
